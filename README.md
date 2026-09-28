@@ -34,7 +34,7 @@ Add `tgcalls` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-tgcalls = "0.2"
+tgcalls = "0.3"
 ```
 
 Before using `tgcalls`, make sure you have:
