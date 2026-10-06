@@ -428,6 +428,18 @@ impl P2PCall {
         self.ntg.on_remote_source_change(callback);
     }
 
+    pub async fn send_external_frame(
+        &mut self,
+        device: ntgcalls::StreamDevice,
+        frame: &[u8],
+        frame_data: &ntgcalls::FrameData,
+    ) -> Result<(), TgCallsError> {
+        Ok(self
+            .ntg
+            .send_external_frame(self.user_id, device, frame, frame_data)
+            .await?)
+    }
+
     /// Hang up and discard the call.
     pub async fn end(&mut self) {
         if self.state == P2PCallState::Ended || self.state == P2PCallState::Idle {
