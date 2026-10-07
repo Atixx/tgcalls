@@ -241,7 +241,9 @@ impl P2PCall {
         let (conn_tx, conn_rx) = mpsc::channel::<bool>(8);
 
         self.ntg.on_signaling_data(move |_user_id, data: Vec<u8>| {
-            let _ = sig_out_tx.try_send(data);
+            if sig_out_tx.try_send(data).is_err() {
+                tracing::error!("try_send returned error")
+            }
         });
 
         self.ntg
@@ -594,6 +596,16 @@ impl P2PCall {
                 }
             }
         }
+    }
+
+    pub fn call_id(&self) -> Option<i64> {
+        self.call_id
+    }
+
+    pub fn call_peer(&self) -> Option<ferogram::tl::enums::InputPhoneCall> {
+        let call_id = self.call_id?;
+        let call_access_hash = self.call_access_hash?;
+        Some(signaling::input_phone_call(call_id, call_access_hash))
     }
 }
 
